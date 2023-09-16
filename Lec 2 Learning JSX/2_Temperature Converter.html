@@ -1,0 +1,46 @@
+<!-- Temperature Converter
+Send Feedback
+Create a React app to convert temperature from fahrenheit to celsius.
+
+
+Note: You have to use paragraph tags to display the data and H1 tag for the heading. -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>React App</title>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const App = () => {
+        // create variable to store fahrenheit here
+        const farenhit = 12;
+
+        // create function to convert into celsius here
+        function celsius() {
+          return ((farenhit - 32) * 5) / 9;
+        }
+        return (
+          <>
+            <h1>Temperature Converter</h1>
+            <p>Temperature in fahrenheit: {farenhit}</p>
+            <p>Temperature in celsius: {celsius()}</p>
+          </>
+        );
+      };
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<App />);
+    </script>
+  </body>
+</html>
