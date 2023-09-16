@@ -1,0 +1,271 @@
+<!-- CMT (Mini Project)
+Send Feedback
+Create a React App to maintain the records of the customers.
+
+Create a form to get the details of the customers, like the guest count, name, and phone number.
+
+Complete the table to show the records of the customers as shown in the output.
+
+When the form is submitted, then "Seats Left" should decrease by the guest count, and a new entry should appear at the top of the table having a blank "Check Out" column and the status should show "Click to Checkout".
+
+After clicking on "Click to Checkout", the user should be checked out, and the "Check Out" column should show the current timestamp as the checkout time. Also, "Seats Left" should increase the guest count.
+
+Clicking on "Delete" in the "Remove Entry" column should delete the record. If it's already checked out and when delete is clicked, then "Seats Left" should not increase, but if the record is deleted before checking out, then "Seats Left" should increase by the guest count.
+
+When the count of guest exceeds "Seats Left" show an alert with the message "Guest count exceeds capacity". Also the "Seats Left" should never exceed "Total Capacity" or have a negative value.
+
+Optionally handle duplicate name entries by showing an alert with the message "Customer already exists" when someone tries to add an entry with a name that already exists in the records table. -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      .App {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+      }
+
+      form {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      form div {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      button {
+        width: 120px;
+        padding-block: 5px;
+        cursor: pointer;
+      }
+
+      th,
+      td {
+        padding: 10px;
+      }
+
+      input {
+        padding: 5px;
+        font-size: 1.1rem;
+      }
+
+      .served {
+        background-color: red;
+      }
+      .dining {
+        background-color: lime;
+        cursor: pointer;
+      }
+    </style>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>React App</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      let customers = [];
+      const capacity = 25;
+      let seatsLeft = 25;
+      let guestCountInput = "";
+      let primaryGuestNameInput = "";
+      let phoneNumberInput = "";
+      let extraMessage = "";
+      const clearInput = () => {
+        guestCountInput = "";
+        primaryGuestNameInput = "";
+        phoneNumberInput = "";
+      };
+      // Create form submit handler here
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        let currGuest = {
+          count: guestCountInput,
+          name: primaryGuestNameInput,
+          phone: phoneNumberInput,
+          checIntime: new Date().getTime(),
+          checkOutTime: null,
+          status: "Click to Checkout",
+        };
+        let index = customers.findIndex((currCust) => {
+          return primaryGuestNameInput === currCust.name;
+        });
+        if (index != -1) {
+          extraMessage = "Customer already exists";
+          clearInput();
+          rootElement.render(<App />);
+          setTimeout(() => {
+            extraMessage = "";
+            rootElement.render(<App />);
+          }, 5000);
+          return;
+        }
+        if (Number(seatsLeft) < Number(guestCountInput)) {
+          extraMessage = "Guest count exceeds capacity";
+          clearInput();
+          rootElement.render(<App />);
+          setTimeout(() => {
+            extraMessage = "";
+            rootElement.render(<App />);
+          }, 5000);
+          return;
+        }
+        let newSeatsCount = Number(seatsLeft) - Number(guestCountInput);
+        seatsLeft = newSeatsCount;
+        customers.push(currGuest);
+        console.log(seatsLeft);
+        clearInput();
+        rootElement.render(<App />);
+      };
+      const timeFormatter = (timeinMilli) => {
+        // Create a new Date object using the timestamp
+        const currentTime = new Date(timeinMilli);
+
+        // Get hours, minutes, and seconds
+        const hours = currentTime.getHours();
+        const minutes = currentTime.getMinutes();
+        const seconds = currentTime.getSeconds();
+
+        // Determine whether it's AM or PM
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        // Convert hours from 24-hour format to 12-hour format
+        const formattedHours = hours % 12 || 12;
+
+        // Add leading zeros to minutes and seconds if they are less than 10
+        const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+        const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+        // Create the formatted time string
+        const formattedTime = `${formattedHours}:${formattedMinutes}:${formattedSeconds} ${ampm}`;
+        return formattedTime;
+      };
+      const handleSatusChange = (timeIndentifer) => {
+        let index = customers.findIndex((currCust) => {
+          return timeIndentifer === currCust.checIntime;
+        });
+        if (customers[index].status === "Served") {
+          return;
+        } else {
+          customers[index].status = "Served";
+          customers[index].checkOutTime = new Date().getTime();
+          let newSeatLeft = Number(seatsLeft) + Number(customers[index].count);
+          seatsLeft = newSeatLeft;
+          if (seatsLeft > 25) {
+            seatsLeft = 25;
+          }
+          rootElement.render(<App />);
+        }
+      };
+      const handleDelete = (timeIndentifer) => {
+        let index = customers.findIndex((currCust) => {
+          return timeIndentifer === currCust.checIntime;
+        });
+        if (customers[index].status !== "Served") {
+          let newSeatLeft = Number(seatsLeft) + Number(customers[index].count);
+          seatsLeft = newSeatLeft;
+        }
+        customers.splice(index, 1);
+        rootElement.render(<App />);
+      };
+      const App = () => (
+        <div className="App" style={{ textAlign: "center" }}>
+          <div>
+            <h2>Total Capacity: {capacity} </h2>
+            <h2>Seats Left: {seatsLeft}</h2>
+          </div>
+
+          {/* Create a form here */}
+          <form onSubmit={handleSubmit}>
+            <input
+              value={guestCountInput}
+              required
+              placeholder="Guests Count"
+              type="number"
+              onChange={(e) => {
+                guestCountInput = e.target.value;
+                rootElement.render(<App />);
+              }}
+            />
+            <input
+              value={primaryGuestNameInput}
+              required
+              placeholder="Primary Guest Name"
+              type="text"
+              onChange={(e) => {
+                primaryGuestNameInput = e.target.value;
+                rootElement.render(<App />);
+              }}
+            />
+            <input
+              value={phoneNumberInput}
+              required
+              placeholder="Phone Number"
+              type="Number"
+              onChange={(e) => {
+                phoneNumberInput = e.target.value;
+                rootElement.render(<App />);
+              }}
+            />
+            <button>Add Entry</button>
+          </form>
+          {/*Element to Display extra messages like seat full or user already exists*/}
+          <p id="extraMessage">{extraMessage}</p>
+          {/* Complete table to show records of customers */}
+          <table border="1px" style={{ margin: "auto" }}>
+            <thead>
+              <tr>
+                <th>Count</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Check In</th>
+                <th>Check Out</th>
+                <th>Status</th>
+                <th>Remove Entry</th>
+              </tr>
+            </thead>
+            <tbody>
+              {customers.map((currCust) => {
+                return (
+                  <tr key={currCust.checIntime}>
+                    <td>{currCust.count}</td>
+                    <td>{currCust.name}</td>
+                    <td>{currCust.phone}</td>
+                    <td>{timeFormatter(currCust.checIntime)}</td>
+                    <td>
+                      {currCust.checkOutTime === null
+                        ? "-"
+                        : timeFormatter(currCust.checkOutTime)}
+                    </td>
+                    <td onClick={() => handleSatusChange(currCust.checIntime)}>
+                      {currCust.status}
+                    </td>
+                    <td onClick={() => handleDelete(currCust.checIntime)}>
+                      Delete
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      );
+
+      const rootElement = ReactDOM.createRoot(document.getElementById("root"));
+      rootElement.render(<App />);
+    </script>
+  </body>
+</html>

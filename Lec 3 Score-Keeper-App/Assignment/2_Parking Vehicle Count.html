@@ -1,0 +1,112 @@
+<!--  Parking Vehicle Count
+Send Feedback
+You need to create a React App to show an ordered list of vehicles count in the parking.
+Note: Vehicle count in the parking should not decrease less than 0.
+If increase button is clicked then that vehicle count should increase by 1 and if decrease button of particular vehicle is clicked then count of that vehicle should decrease by 1.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <title>React App</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      // Create handlers to increase and decrease vehicle count here
+      let carCount = 0;
+      let bikeCount = 0;
+      let scootyCount = 0;
+      let bicycleCount = 0;
+      const handleChange = (e) => {
+        const clickLocation = e.target.id;
+        if (clickLocation === "carInc") {
+          carCount++;
+        } else if (clickLocation === "bikeInc") {
+          bikeCount++;
+        } else if (clickLocation === "scootyInc") {
+          scootyCount++;
+        } else if (clickLocation === "bicycleInc") {
+          bicycleCount++;
+        } else if (clickLocation === "carDec") {
+          carCount--;
+          carCount < 0 ? (carCount = 0) : "";
+        } else if (clickLocation === "bikeDec") {
+          bikeCount--;
+          bikeCount < 0 ? (bikeCount = 0) : "";
+        } else if (clickLocation === "scootyDec") {
+          scootyCount--;
+          scootyCount < 0 ? (scootyCount = 0) : "";
+        } else {
+          bicycleCount--;
+          bicycleCount < 0 ? (bicycleCount = 0) : "";
+        }
+
+        rootElement.render(<App />);
+      };
+      const App = () => (
+        <>
+          <p>List of all the vehicles count in the parking.</p>
+          <ol>
+            <li>
+              <p>
+                <b>Car: {carCount}</b> &emsp;
+                <button id="carInc" onClick={handleChange}>
+                  Increase
+                </button>
+                <button id="carDec" onClick={handleChange}>
+                  Decrease
+                </button>
+              </p>
+            </li>
+            <li>
+              <p>
+                <b>Bike: {bikeCount}</b> &emsp;
+                <button id="bikeInc" onClick={handleChange}>
+                  Increase
+                </button>
+                <button id="bikeDec" onClick={handleChange}>
+                  Decrease
+                </button>
+              </p>
+            </li>
+            <li>
+              <p>
+                <b>Scooty: {scootyCount}</b> &emsp;
+                <button id="scootyInc" onClick={handleChange}>
+                  Increase
+                </button>
+                <button id="scootyDec" onClick={handleChange}>
+                  Decrease
+                </button>
+              </p>
+            </li>
+            <li>
+              <p>
+                <b>Bicycle: {bicycleCount}</b> &emsp;
+                <button id="bicycleInc" onClick={handleChange}>
+                  Increase
+                </button>
+                <button id="biCycleDec" onClick={handleChange}>
+                  Decrease
+                </button>
+              </p>
+            </li>
+          </ol>
+        </>
+      );
+
+      const rootElement = ReactDOM.createRoot(document.getElementById("root"));
+      rootElement.render(<App />);
+    </script>
+  </body>
+</html>

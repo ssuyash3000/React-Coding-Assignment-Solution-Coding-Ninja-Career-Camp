@@ -1,0 +1,109 @@
+<!-- Forms in JSX
+Send Feedback
+Create a React App that displays the student details .
+In this App, you need to create a form which takes the name and marks obtained by the student as input. When the button is clicked then you have to insert that student's name and marks inside the table which should be below the Student form.
+Make sure the entire page should not reload.
+There are 2 components. Form and Result. You need to complete them.
+Inside the Result component, there should be a table which will show all the students' name and marks. -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      th,
+      td {
+        padding: 10px;
+      }
+      table {
+        border-collapse: collapse;
+        border: 1px solid black;
+      }
+    </style>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <title>React App</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      let currStudentName = "";
+      let currStudentMarks = "";
+      let students = [];
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        let currStudent = {
+          name: currStudentName,
+          marks: currStudentMarks,
+        };
+        students.push(currStudent);
+        currStudentName = "";
+        currStudentMarks = "";
+        rootElement.render(<App />);
+      };
+      const Form = () => (
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Name"
+            value={currStudentName}
+            onChange={(e) => {
+              currStudentName = e.target.value;
+              rootElement.render(<App />);
+            }}
+          />
+          <input
+            type="number"
+            placeholder="Marks"
+            value={currStudentMarks}
+            onChange={(e) => {
+              currStudentMarks = e.target.value;
+              rootElement.render(<App />);
+            }}
+          />
+          <button>Submit</button>
+        </form>
+      );
+
+      const Result = () => {
+        return (
+          <table border="1px" style={{ marginTop: 10 }}>
+            <thead>
+              <tr>
+                <th>Student's name</th>
+                <th>Marks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((currStu) => {
+                return (
+                  <tr div key={currStu.name}>
+                    <td>{currStu.name}</td>
+                    <td>{currStu.marks}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        );
+      };
+
+      const App = () => (
+        <>
+          <Form />
+          <Result />
+        </>
+      );
+
+      const rootElement = ReactDOM.createRoot(document.getElementById("root"));
+      rootElement.render(<App />);
+    </script>
+  </body>
+</html>

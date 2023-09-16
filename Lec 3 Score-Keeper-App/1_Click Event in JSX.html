@@ -1,0 +1,50 @@
+<!-- Click Event in JSX
+Send Feedback
+You have to create a React app that toggles the view of a paragraph with a click of a button.
+Create a button below the heading tag. The button should use the setShow function to toggle the view of the paragraph element when clicked. -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <title>React App</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      let showState = true;
+      let buttonText = "Show Element Below";
+      const setShow = () => {
+        if (showState === false) {
+          showState = true;
+          buttonText = "Hide Element Below";
+        } else {
+          showState = false;
+          buttonText = "Show Element Below";
+        }
+        rootElement.render(<App />);
+      };
+
+      const App = () => (
+        <>
+          <h1>Coding Ninjas</h1>
+          <button onClick={setShow}>{buttonText}</button>
+
+          {showState === true ? <p>Hello ninjas, I am here.</p> : <p></p>}
+        </>
+      );
+
+      const rootElement = ReactDOM.createRoot(document.getElementById("root"));
+      rootElement.render(<App />);
+    </script>
+  </body>
+</html>
