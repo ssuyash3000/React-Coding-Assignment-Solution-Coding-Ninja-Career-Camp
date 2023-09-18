@@ -1,0 +1,27 @@
+/* Write code for your CSS here */
+#basicInfo {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+}
+
+#skills {
+  display: flex;
+  justify-content: space-around;
+  list-style-type: none;
+}
+
+.skill {
+  background-color: aqua;
+  padding: 1%;
+  border-radius: 20%;
+}
+#about {
+  margin-left: 30%;
+  height: 5%;
+  width: 30%;
+}
+p {
+  text-align: justify;
+  text-justify: inter-word;
+}
