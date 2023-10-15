@@ -3,7 +3,7 @@ import { email, name } from "./HomePage";
 const Form = () => (
   <>
     <div>
-      <form>
+      <form onSubmit={(e) => e.preventDefault()}>
         <h3>Login Page</h3>
         <input type="text" placeholder="YourName" value={name} />
         <input type="email" placeholder="xyz@pqr.com" value={email} />
